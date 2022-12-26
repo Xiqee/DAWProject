@@ -7,10 +7,6 @@ app.use(express.json());
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 
-//recebe como primeiro parametro o path e segundo argumento o path raiz a partir do qual os ativos estáticos serão atendidos
-app.use("/",
-    express.static(path.join(__dirname, "../../client/dist"))
-);
 
 //CORS SECURITY
 app.use(function (inRequest: Request, inResponse: Response, inNext: NextFunction) {
