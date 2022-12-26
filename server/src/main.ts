@@ -1,7 +1,7 @@
 import path from "path";
 import express, { Express, NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
-const Msg = require('./models/messages');
+const Msg = require('./models/message');
 
 const app: Express = express();
 app.use(express.json());
@@ -30,19 +30,6 @@ async function connect() {
         console.error(error);
     }
 }
-
-app.get('/add-message', (req, res) => {
-    const message = new Msg({
-        msg:"Dog"
-    })
-    message.save()
-        .then((result: any) => {
-            res.send(result);
-        })
-        .catch((err:any) => {
-            console.log(err);
-        });
-});
 
 
 async function start(){
