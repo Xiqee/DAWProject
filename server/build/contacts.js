@@ -25,7 +25,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Worker = void 0;
 const path = __importStar(require("path"));
-const Datastore = require("nedb");
+const Datastore = require("mongoose"); //modulo node que pode ser usado apenas como armazenamento de dados na memoria ou persistente
+//filname : local do arquivo do banco de dados
+//autoload : faz o carregamento automatico do banco de dados caso ele ja exista no diretorio definido no filename
 class Worker {
     constructor() {
         this.db = new Datastore({
@@ -33,6 +35,8 @@ class Worker {
             autoload: true
         });
     }
+    //lista todos os contactos
+    //db.find recebe "{}" que remete a todos os contactos e uma funcao callback
     listContacts() {
         return new Promise((inResolve, inReject) => {
             this.db.find({}, (inError, inDocs) => {
@@ -45,6 +49,7 @@ class Worker {
             });
         });
     }
+    //recebe um contacto e adiciona a db atraves do db.insert
     addContact(inContact) {
         return new Promise((inResolve, inReject) => {
             this.db.insert(inContact, (inError, inNewDoc) => {
@@ -57,6 +62,7 @@ class Worker {
             });
         });
     }
+    //recebe um id do contacto e remove o da db atraves do db.remove
     deleteContact(inID) {
         return new Promise((inResolve, inReject) => {
             this.db.remove({ _id: inID }, {}, (inError, inNumRemoved) => {

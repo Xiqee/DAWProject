@@ -1,5 +1,6 @@
 import path from "path";
 import express, { Express, NextFunction, Request, Response } from "express";
+import mongoose from "mongoose";
 
 import { serverInfo } from "./serverInfo";
 import * as SMTP from "./SMTP";
@@ -75,4 +76,27 @@ app.delete("/contacts/:id", async (inRequest: Request, inResponse: Response) => 
         inResponse.send("error"); //Na resposta envia mensagem "error"
     }
 });
-app.listen(8080);//faz a conexao ao host
+
+const uri = "mongodb+srv://a71254:53420a@cluster0.fqb8cuo.mongodb.net/?retryWrites=true&w=majority";
+
+async function connect() {
+    try {
+        await mongoose.connect(uri);
+        console.log("Connected to MongoDB");
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function start(){
+    try {
+        await connect();
+        await app.listen(8080);
+        console.log("App successfully started on port 8080")
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
+
+start();

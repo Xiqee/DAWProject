@@ -49,7 +49,6 @@ class BaseLayout extends Component {
 
         <div className="toolbar"><Toolbar state={ this.state } /></div>
 
-        <div className="mailboxList"><MailboxList state={ this.state } /></div>
 
         <div className="centerArea">
          <div className="messageList"><MessageList state={ this.state } /></div>

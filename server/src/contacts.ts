@@ -1,5 +1,5 @@
 import * as path from "path";
-const Datastore = require("nedb");//modulo node que pode ser usado apenas como armazenamento de dados na memoria ou persistente
+const Datastore = require("mongoose");//modulo node que pode ser usado apenas como armazenamento de dados na memoria ou persistente
 
 
 
