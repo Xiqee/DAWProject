@@ -38,14 +38,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
-const serverInfo_1 = require("./serverInfo");
-const SMTP = __importStar(require("./SMTP"));
 const Contacts = __importStar(require("./contacts"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
 //recebe como primeiro parametro o path e segundo argumento o path raiz a partir do qual os ativos estáticos serão atendidos
 app.use("/", express_1.default.static(path_1.default.join(__dirname, "../../client/dist")));
-//recebe um request e uma response
+//CORS SECURITY
 app.use(function (inRequest, inResponse, inNext) {
     inResponse.header("Access-Control-Allow-Origin", "*"); //escreve no header da response o CORS
     inResponse.header("Access-Control-Allow-Methods", "GET,POST,DELETE,OPTIONS"); //escreve no header da response os methods
@@ -55,8 +55,6 @@ app.use(function (inRequest, inResponse, inNext) {
 //recebe como primeiro argumento um path que é "/messages" e o segundo um callback
 app.post("/messages", (inRequest, inResponse) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const smtpWorker = new SMTP.Worker(serverInfo_1.serverInfo); //Cria uma variavel do tipo Worker
-        yield smtpWorker.sendMessage(inRequest.body); //Envia mensagem usando a funcao sendMessage do ficheiro
         inResponse.send("ok"); //Na resposta envia mensagem "ok"
     }
     catch (inError) {
@@ -80,7 +78,7 @@ app.get("/contacts", (inRequest, inResponse) => __awaiter(void 0, void 0, void 0
 app.post("/contacts", (inRequest, inResponse) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const contactsWorker = new Contacts.Worker(); //Cria uma variavel do tipo worker
-        const contact = yield contactsWorker.addContact(inRequest.body); //adiciona o contacto a lista 
+        const contact = yield contactsWorker.addContact(inRequest.body); //adiciona o contacto a lista
         inResponse.json(contact); // for client acknowledgment and future use ( includesID), serve para apresnetar o contacto na response
     }
     catch (inError) {

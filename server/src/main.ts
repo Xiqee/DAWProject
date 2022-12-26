@@ -2,20 +2,21 @@ import path from "path";
 import express, { Express, NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 
-import { serverInfo } from "./serverInfo";
-import * as SMTP from "./SMTP";
+
 import * as Contacts from "./contacts";
 import { IContact } from "./contacts";
 
 const app: Express = express();
 app.use(express.json());
-
+const http = require('http').Server(app)
+const io = require('socket.io')(http)
 
 //recebe como primeiro parametro o path e segundo argumento o path raiz a partir do qual os ativos estáticos serão atendidos
 app.use("/",
     express.static(path.join(__dirname, "../../client/dist"))
 );
-//recebe um request e uma response
+
+//CORS SECURITY
 app.use(function (inRequest: Request, inResponse: Response, inNext: NextFunction) {
     inResponse.header("Access-Control-Allow-Origin", "*");//escreve no header da response o CORS
     inResponse.header("Access-Control-Allow-Methods","GET,POST,DELETE,OPTIONS");//escreve no header da response os methods
@@ -26,8 +27,7 @@ app.use(function (inRequest: Request, inResponse: Response, inNext: NextFunction
 //recebe como primeiro argumento um path que é "/messages" e o segundo um callback
 app.post("/messages", async (inRequest: Request, inResponse: Response) => {
     try {
-        const smtpWorker: SMTP.Worker = new SMTP.Worker(serverInfo);//Cria uma variavel do tipo Worker
-        await smtpWorker.sendMessage(inRequest.body); //Envia mensagem usando a funcao sendMessage do ficheiro
+
         inResponse.send("ok");//Na resposta envia mensagem "ok"
     }
     catch (inError) {
@@ -56,7 +56,7 @@ app.post("/contacts",
     async (inRequest: Request, inResponse: Response) => {
         try {
             const contactsWorker: Contacts.Worker = new Contacts.Worker();//Cria uma variavel do tipo worker
-            const contact: IContact = await contactsWorker.addContact(inRequest.body);//adiciona o contacto a lista 
+            const contact: IContact = await contactsWorker.addContact(inRequest.body);//adiciona o contacto a lista
             inResponse.json(contact); // for client acknowledgment and future use ( includesID), serve para apresnetar o contacto na response
         }
         catch (inError) {
