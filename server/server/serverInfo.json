@@ -1,0 +1,5 @@
+{
+    "smtp":{
+    "host": "smtp-mail.outlook.com", "port" : 587,
+    "auth": {"user" : "a71287@ualg.pt", "pass" : "#w##!7"}}
+}
