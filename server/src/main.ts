@@ -1,12 +1,13 @@
 import path from "path";
 import express, { Express, NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
-const Msg = require('./models/message');
 
 const app: Express = express();
 app.use(express.json());
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
+const Msg = require('./models/messages');
+
 
 app.use("/", express.static(path.join( __dirname,"../../client/dist")))
 
@@ -22,6 +23,7 @@ app.use(function (inRequest: Request, inResponse: Response, inNext: NextFunction
 
 const uri = "mongodb+srv://a71254:53420a@cluster0.fqb8cuo.mongodb.net/?retryWrites=true&w=majority";
 
+
 async function connect() {
     try {
         await mongoose.connect(uri);
@@ -32,10 +34,26 @@ async function connect() {
 }
 
 
+io.on('connection', (socket: { emit: (arg0: string, arg1: string) => void; on: (arg0: string, arg1: (msg: any) => void) => void; }) => {
+    Msg.find().then((result: any) => {
+        socket.emit('output-messages', result)
+    })
+    console.log('a user connected');
+    socket.emit('message', 'Hello world');
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+    socket.on('chatmessage', (msg: any) => {
+        const message = new Msg({ msg });
+        message.save().then(() => {
+            io.emit('message', msg)
+        })
+    })
+});
+
 async function start(){
     try {
         await connect();
-
         await app.listen(8080);
         console.log("App successfully started on port 8080")
     }
