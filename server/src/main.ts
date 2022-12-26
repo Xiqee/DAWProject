@@ -7,6 +7,8 @@ app.use(express.json());
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 
+app.use("/", express.static(path.join( __dirname,"../../client/dist")))
+
 
 //CORS SECURITY
 app.use(function (inRequest: Request, inResponse: Response, inNext: NextFunction) {
