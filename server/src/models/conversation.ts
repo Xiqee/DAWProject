@@ -2,11 +2,12 @@ import mongoose from "mongoose"
 
 const ConversationSchema = new mongoose.Schema(
     {
-        members: {
-            type: Array,
+        name: {
+            type: String,
+            required: "Name is required!",
         },
     },
     { timestamps: true }
 );
 
-module.exports = mongoose.model("conversation", ConversationSchema);
+module.exports = mongoose.model("Conversation", ConversationSchema);

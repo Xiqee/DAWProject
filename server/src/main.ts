@@ -1,65 +1,195 @@
 import path from "path";
 import express, { Express, NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
-
-const app: Express = express();
-app.use(express.json());
-const http = require('http').Server(app)
-const io = require('socket.io')(http)
-const Msg = require('./models/messages');
+import { Socket } from "socket.io"
+import {sha256} from "js-sha256";
+const jwt = require("jwt-then");
 
 
-app.use("/", express.static(path.join( __dirname,"../../client/dist")))
-
-
-//CORS SECURITY
-app.use(function (inRequest: Request, inResponse: Response, inNext: NextFunction) {
-    inResponse.header("Access-Control-Allow-Origin", "*");//escreve no header da response o CORS
-    inResponse.header("Access-Control-Allow-Methods","GET,POST,DELETE,OPTIONS");//escreve no header da response os methods
-    inResponse.header("Access-Control-Allow-Headers","Origin,X-Requested-With,Content-Type,Accept");//escreve no header da response o header
-    inNext();
-});
 
 
 const uri = "mongodb+srv://a71254:53420a@cluster0.fqb8cuo.mongodb.net/?retryWrites=true&w=majority";
 
+mongoose.connect(uri, {
+});
 
-async function connect() {
+mongoose.connection.on("error", (err:any) => {
+    console.log("Mongoose Connection ERROR: " + err.message);
+});
+
+mongoose.connection.once("open", () => {
+    console.log("MongoDB Connected!");
+});
+
+const app: Express = express();
+app.use( express.json());
+
+app.use("/", express.static(path.join( __dirname,"../../client/dist")))
+
+
+require("./models/user")
+require("./models/message")
+const User = mongoose.model("User");
+const Message = mongoose.model("Message");
+
+app.post("/user",async(inRequest: Request , inResponse : Response ) => {
     try {
-        await mongoose.connect(uri);
-        console.log("Connected to MongoDB");
-    } catch (error) {
-        console.error(error);
+        const { username, email, password } = inRequest.body;
+        const userExists = await User.findOne({
+            email,
+        });
+
+        if (userExists) throw "User with same email already exits.";
+
+        const user = new User({
+            username,
+            email,
+            password: sha256(password + "ksjdfiwejiesldcl"),
+        });
+
+        await user.save();
+        inResponse.send("ok");
     }
-}
+    catch(inError){
+        inResponse.send("error");
+    }
+});
+
+app.get("/user",
+    async ( inRequest:Request , inResponse:Response) => {
+        try {
+            const { email, password } = inRequest.body;
+            const user = await User.findOne({
+                email,
+                password:sha256(password + process.env.SALT),
+            });
+
+            if (user){
+                const token = await jwt.sign(user.toObject(), "dskfjslkdjfm2");
+                inResponse.json({
+                    message:"ok",
+
+                    token,
+                });
+            }
+            else inResponse.send("wrong credentials")
+
+        }
+        catch(inError){
+            inResponse.send("error");
+        }
+    });
+
+const server = app.listen(8080);
+
+const io = require("socket.io")(server, {
+    allowEIO3: true,
+    cors: {
+        origin: true,
+        methods: ['GET', 'POST'],
+        credentials: true
+    }
+});
+io.use(async (socket:any, next:NextFunction) => {
+    try {
+        const token = socket.handshake.query.token;
+        const payload = await jwt.verify(token, process.env.SECRET);
+        socket.userId = payload.id;
+        next();
+    } catch (err) {}
+});
+
+io.on("connection", (socket:any) => {
+    console.log("Connected: " + socket.userId);
+
+    socket.on("disconnect", () => {
+        console.log("Disconnected: " + socket.userId);
+    });
+
+    socket.on("joinRoom", ({ conversationId } : { conversationId: String}) => {
+        socket.join(conversationId);
+        console.log("A user joined chatroom: " + conversationId);
+    });
+
+    socket.on("leaveRoom", ({ conversationId } : { conversationId: String}) => {
+        socket.leave(conversationId);
+        console.log("A user left chatroom: " + conversationId);
+    });
+
+    socket.on("chatroomMessage", async ({ conversationId, message } : { conversationId: String, message: String}) => {
+        if (message.trim().length > 0) {
+            const user = await User.findOne({ _id: socket.userId });
+            const newMessage = new Message({
+                chatroom: conversationId,
+                user: socket.userId,
+                message,
+            });
+            io.to(conversationId).emit("newMessage", {
+                message,
+                name: user.name,
+                userId: socket.userId,
+            });
+            await newMessage.save();
+        }
+    });
+});
 
 
-io.on('connection', (socket: { emit: (arg0: string, arg1: string) => void; on: (arg0: string, arg1: (msg: any) => void) => void; }) => {
-    Msg.find().then((result: any) => {
-        socket.emit('output-messages', result)
-    })
-    console.log('a user connected');
-    socket.emit('message', 'Hello world');
+
+
+
+
+/*
+const io = require("socket.io")(server, {
+    allowEIO3: true,
+    cors: {
+        origin: true,
+        methods: ['GET', 'POST'],
+        credentials: true
+    }
+});
+
+
+io.use(async (socket: any, next: NextFunction) => {
+    try {
+        const token = socket.handshake.query.token;
+        const payload = await jwt.verify(token, process.env.SECRET);
+        socket.userId = payload.id;
+        next();
+    } catch (err) {}
+});
+io.on('connection', (socket:any) => {
+
     socket.on('disconnect', () => {
         console.log('user disconnected');
     });
-    socket.on('chatmessage', (msg: any) => {
-        const message = new Msg({ msg });
-        message.save().then(() => {
-            io.emit('message', msg)
-        })
-    })
+    socket.on("joinConversation", ({ conversationID } : {conversationID: String}) => {
+        socket.join(conversationID);
+        console.log("A user joined conversation: " + conversationID);
+    });
+    socket.on("leaveConversation", ({ conversationID } : {conversationID: String}) => {
+        socket.leave(conversationID);
+        console.log("A user left conversation: " + conversationID);
+    });
+
+
+    socket.on("ConversationMessage", async ({ conversationID, message } : { conversationID: String,message:String}) => {
+        if (message.trim().length > 0) {
+            const user = await User.findOne({ _id: socket.userId });
+            const newMessage = new Message({
+                conversationId : conversationID,
+                sender: socket.userId,
+                text: message,
+            });
+            io.to(conversationID).emit("newMessage", {
+                message,
+                name: user.name,
+                userId: socket.userId,
+            });
+            await newMessage.save();
+        }
+    });
 });
+*/
 
-async function start(){
-    try {
-        await connect();
-        await app.listen(8080);
-        console.log("App successfully started on port 8080")
-    }
-    catch (error) {
-        console.error(error);
-    }
-}
 
-start();
