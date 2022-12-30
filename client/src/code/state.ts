@@ -10,7 +10,7 @@ export function createState(inParentComponent) {
     // Flag: Is the please wait dialog visible?
     pleaseWaitVisible : false,
 
-    // List of users.
+    // List of users in conversation.
     users : [ ],
 
     // List of conversations.
@@ -31,10 +31,10 @@ export function createState(inParentComponent) {
     messageFrom : null,
     messageBody : null,
 
-    // The details of the contact currently being viewed or added, if any.
-    UserID : null,
-    UserName : null,
-    UserEmail : null,
+    // The details of the user
+    user:{
+      name: '',
+    },
 
     // ------------------------------------------------------------------------------------------------
     // ------------------------------------ Event Handler functions -----------------------------------

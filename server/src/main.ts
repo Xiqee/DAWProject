@@ -32,7 +32,7 @@ require("./models/message")
 const User = mongoose.model("User");
 const Message = mongoose.model("Message");
 
-app.post("/user",async(inRequest: Request , inResponse : Response ) => {
+app.post("/register",async(inRequest: Request , inResponse : Response ) => {
     try {
         const { username, email, password } = inRequest.body;
         const userExists = await User.findOne({
@@ -55,20 +55,20 @@ app.post("/user",async(inRequest: Request , inResponse : Response ) => {
     }
 });
 
-app.get("/user",
+app.post("/login",
     async ( inRequest:Request , inResponse:Response) => {
         try {
             const { email, password } = inRequest.body;
             const user = await User.findOne({
                 email,
-                password:sha256(password + process.env.SALT),
+                password:sha256(password + "ksjdfiwejiesldcl"),
             });
 
             if (user){
                 const token = await jwt.sign(user.toObject(), "dskfjslkdjfm2");
                 inResponse.json({
+                    user: user,
                     message:"ok",
-
                     token,
                 });
             }

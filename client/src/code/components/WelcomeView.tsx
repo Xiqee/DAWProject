@@ -5,13 +5,17 @@ import React from "react";
 /**
  * WelcomeView.
  */
-const WelcomeView = () => (
+const WelcomeView = ({state}) => {
+    return(
+    <div style={{position: "relative", top: "40%", textAlign: "center", color: "#ff0000"}}>
+        <h1>Welcome to Devour Chat!</h1>
+        <button onClick={ () => state.currentView = "register" }>
+            Register!
+        </button>
+    </div>
+    )
 
-  <div style={{ position:"relative", top:"40%", textAlign:"center", color:"#ff0000" }}>
-    <h1>Welcome to Devour Chat!</h1>
-  </div>
-
-); /* WelcomeView. */
+}; /* WelcomeView. */
 
 
 export default WelcomeView;

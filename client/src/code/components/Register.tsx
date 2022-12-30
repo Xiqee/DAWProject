@@ -1,81 +1,100 @@
-import axios from "axios";
-import {useRef} from "react";
-import "./register.css";
-import {useNavigate} from "react-router-dom";
-import React from "react";
+import * as React from 'react';
+import axios from 'axios';
 
-const username = useRef<HTMLInputElement>();
-const email = useRef<HTMLInputElement>();
-const password = useRef<HTMLInputElement>();
-const passwordAgain = useRef<HTMLInputElement>();
-const navigate = useNavigate();
+interface FormState {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+}
 
-const handleClick = async (e) => {
-    e.preventDefault();
-    if (passwordAgain.current.value !== password.current.value) {
-        passwordAgain.current.setCustomValidity("Passwords don't match!");
-    } else {
-        const user = {
-            username: username.current.value,
-            email: email.current.value,
-            password: password.current.value,
-        };
+const Register = () => {
+    const [formState, setFormState] = React.useState<FormState>({
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+    });
+    const [error, setError] = React.useState('');
+    const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setFormState((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setIsSubmitting(true);
+        setError('');
+
         try {
-            await axios.post("/user", user);
-            navigate("/login");
-        } catch (err) {
-            console.log(err);
+            if (formState.password !== formState.confirmPassword) {
+                throw new Error('Passwords do not match');
+            }
+
+            const response = await axios.post('http://localhost:8080/user', {
+                username: formState.name,
+                email: formState.email,
+                password: formState.password,
+            });
+
+            // Do something with the response data
+            console.log(response.data);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setIsSubmitting(false);
         }
-    }
+    };
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <label htmlFor="name">Name:</label>
+            <input
+                type="text"
+                id="name"
+                name="name"
+                value={formState.name}
+                onChange={handleChange}
+            />
+            <br />
+            <label htmlFor="email">Email:</label>
+            <input
+                type="email"
+                id="email"
+                name="email"
+                value={formState.email}
+                onChange={handleChange}
+            />
+            <br />
+            <label htmlFor="password">Password:</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                value={formState.password}
+                onChange={handleChange}
+            />
+            <br />
+            <label htmlFor="confirmPassword">Confirm Password:</label>
+            <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formState.confirmPassword}
+                onChange={handleChange}
+            />
+            <br />
+            {error && <div>{error}</div>}
+            <button type="submit" disabled={isSubmitting}>
+                Register
+            </button>
+        </form>
+    );
 };
-
-const Register = () => (
-    <div className="login">
-        <div className="loginWrapper">
-            <div className="loginLeft">
-                <h3 className="loginLogo">Lamasocial</h3>
-                <span className="loginDesc">
-            Connect with friends and the world around you on Lamasocial.
-          </span>
-            </div>
-            <div className="loginRight">
-                <form className="loginBox" onSubmit={handleClick}>
-                    <input
-                        placeholder="Username"
-                        required
-                        ref={username}
-                        className="loginInput"
-                    />
-                    <input
-                        placeholder="Email"
-                        required
-                        ref={email}
-                        className="loginInput"
-                        type="email"
-                    />
-                    <input
-                        placeholder="Password"
-                        required
-                        ref={password}
-                        className="loginInput"
-                        type="password"
-                    />
-                    <input
-                        placeholder="Password Again"
-                        required
-                        ref={passwordAgain}
-                        className="loginInput"
-                        type="password"
-                    />
-                    <button className="loginButton" type="submit">
-                        Sign Up
-                    </button>
-                    <button className="loginRegisterButton">Log into Account</button>
-                </form>
-            </div>
-        </div>
-    </div>
-);
-
 
 export default Register;

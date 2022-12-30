@@ -1,3 +1,4 @@
+
 // React imports.
 import React, { Component } from "react";
 
@@ -12,7 +13,7 @@ import Toolbar from "./Toolbar";
 import ConversationList from "./ConversationList";
 import WelcomeView from "./WelcomeView";
 import ConversationView from "./ConversationView";
-//import Login from "./Login"
+import Login from "./Login"
 import Register from "./Register"
 import { createState } from "../state";
 
@@ -41,7 +42,8 @@ class BaseLayout extends Component {
         <div className="centerArea">
          <div className="centerViews">
              { this.state.currentView === "register" && <Register/> }
-           { this.state.currentView === "welcome" && <WelcomeView /> }
+             { this.state.currentView === "login" && <Login state = {this.state} /> }
+           { this.state.currentView === "welcome" && <WelcomeView state = {this.state} /> }
          </div>
         </div>
       </div>
