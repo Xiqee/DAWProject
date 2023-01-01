@@ -2,26 +2,37 @@ import path from "path";
 import express, {Express, Request, Response} from "express";
 import mongoose from "mongoose";
 import {sha256} from "js-sha256";
-
 const jwt = require("jwt-then");
 require("dotenv").config()
 
+//Connect to Mongo DB
 mongoose.connect(process.env.DB as string).then(() => {
     console.log("DB connected")
 }).catch(err => {
     console.log(err)
 });
 
+//Create express app for REST API
 const app: Express = express();
 app.use(express.json());
 
+//Use client side
 app.use("/", express.static(path.join(__dirname, "../../client/dist")))
 
+
+//Import Mongo DB models
 require("./models/user")
 require("./models/blogpost")
+require("./models/comment")
 const User = mongoose.model("User");
 const BlogPost = mongoose.model("BlogPost");
+const Comment = mongoose.model("Comment");
 
+/*
+Register method which takes an HTTP request with username, email and password.
+If a user with the email already exists it isn't added.
+Otherwise, the user is added to the DB with a hashed password(SHA256)
+ */
 app.post("/register", async (inRequest: Request, inResponse: Response) => {
     try {
         const {username, email, password} = inRequest.body;
@@ -46,6 +57,10 @@ app.post("/register", async (inRequest: Request, inResponse: Response) => {
     }
 });
 
+/*
+Login method which takes an HTTP request with email and password.
+If the given data matches a user's data a jwt token is created
+ */
 app.post("/login",
     async (inRequest: Request, inResponse: Response) => {
         try {
@@ -68,7 +83,9 @@ app.post("/login",
             inResponse.send("error");
         }
     });
-
+/*
+Create blog post method which takes an HTTP request with authorID and text.
+ */
 app.post("/blogpost",
     async (inRequest: Request, inResponse: Response) => {
         try {
@@ -83,7 +100,9 @@ app.post("/blogpost",
             inResponse.send("error");
         }
     });
-
+/*
+Update blog post method which takes an HTTP request with authorID and text.
+ */
 app.post("/blogpost/:id",
     async (inRequest: Request, inResponse: Response) => {
         try {
@@ -99,7 +118,9 @@ app.post("/blogpost/:id",
         }
     });
 
-
+/*
+Blogpost get method that gets all blogposts from the db.
+ */
 app.get("/blogpost",
     async (inRequest: Request, inResponse: Response) => {
         try {
@@ -111,6 +132,10 @@ app.get("/blogpost",
         }
     });
 
+/*
+Blogpost get method that gets the blogpost with the given id
+ */
+
 app.get("/blogpost/:id",
     async (inRequest: Request, inResponse: Response) => {
         try {
@@ -121,6 +146,26 @@ app.get("/blogpost/:id",
             inResponse.send("error");
         }
     });
+
+/*
+Create blog post method which takes an HTTP request with postID, authorID and text.
+ */
+app.post("/comment/:id",
+    async (inRequest: Request, inResponse: Response) => {
+        try {
+            const {authorID, text} = inRequest.body;
+            const comment = await new Comment( {
+                postID: inRequest.params.id,
+                authorID: authorID,
+                text: text,
+            });
+            if (await comment.save()) inResponse.send("done")
+            else inResponse.send("DB error")
+        } catch (inError) {
+            inResponse.send("error");
+        }
+    });
+
 
 app.listen(8080);
 

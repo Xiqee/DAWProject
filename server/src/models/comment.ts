@@ -1,7 +1,11 @@
 import mongoose from "mongoose"
 
-const BlogPostSchema = new mongoose.Schema(
+const CommentSchema = new mongoose.Schema(
     {
+        postID:{
+            type: String,
+            required: "PostID is required!",
+        },
         authorID: {
             type: String,
             required: "Author is required!",
@@ -18,4 +22,4 @@ const BlogPostSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-module.exports = mongoose.model("BlogPost", BlogPostSchema);
+module.exports = mongoose.model("Comment", CommentSchema);
