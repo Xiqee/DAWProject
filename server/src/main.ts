@@ -117,6 +117,19 @@ app.post("/blogpost/:id",
             inResponse.send("error");
         }
     });
+/*
+Update blog post method which increments the likes value of the post with given ID.
+ */
+app.post("/blogpost/like/:id",
+    async (inRequest: Request, inResponse: Response) => {
+        try {
+            await BlogPost.findOneAndUpdate({_id :inRequest.params.id}, {$inc : {'post.likes' : 1}});
+            inResponse.send("done");
+        } catch (inError) {
+            inResponse.send("error");
+        }
+    });
+
 
 /*
 Blogpost get method that gets all blogposts from the db.
