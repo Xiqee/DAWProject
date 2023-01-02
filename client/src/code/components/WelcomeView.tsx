@@ -12,6 +12,9 @@ const WelcomeView = ({setState}) => {
         <button onClick={ () => setState({view: "register"})}>
             Register!
         </button>
+        <button onClick={ () => setState({view: "login"})}>
+            Login!
+        </button>
     </div>
     )
 

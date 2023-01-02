@@ -1,5 +1,9 @@
 import * as React from 'react';
 import axios from 'axios';
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import "bootstrap/dist/css/bootstrap.min.css"
 
 interface FormState {
     name: string;
@@ -53,48 +57,77 @@ const Register = ({setState}) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label htmlFor="name">Name:</label>
-            <input
-                type="text"
-                id="name"
-                name="name"
-                value={formState.name}
-                onChange={handleChange}
-            />
-            <br />
-            <label htmlFor="email">Email:</label>
-            <input
-                type="email"
-                id="email"
-                name="email"
-                value={formState.email}
-                onChange={handleChange}
-            />
-            <br />
-            <label htmlFor="password">Password:</label>
-            <input
-                type="password"
-                id="password"
-                name="password"
-                value={formState.password}
-                onChange={handleChange}
-            />
-            <br />
-            <label htmlFor="confirmPassword">Confirm Password:</label>
-            <input
-                type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                value={formState.confirmPassword}
-                onChange={handleChange}
-            />
-            <br />
-            {error && <div>{error}</div>}
-            <button type="submit" disabled={isSubmitting}>
-                Register
-            </button>
-        </form>
+
+        <><Navbar bg="dark" variant="dark">
+            <Container>
+                <Navbar.Brand href="#home">Devour Forum</Navbar.Brand>
+                <Nav className="me-auto">
+                    <Nav.Link href="#home">Home</Nav.Link>
+                    <Nav.Link href="#register">Register</Nav.Link>
+                    <Nav.Link href="#login">Login</Nav.Link>
+                </Nav>
+            </Container>
+        </Navbar>
+            <h1 className="display-6" style={{ paddingTop:'40px', height:'100%', width:'100%', display:'flex', justifyContent:'center' }}>Register</h1>
+            <div style={{ paddingTop:'15px', height:'100%', width:'100%', display:'flex', justifyContent:'center', alignItems:'center'}} >
+            <form onSubmit={handleSubmit} style={{ width:'45%'}}>
+                <div className="form-floating mb-2">
+                <input
+                    className="form-control"
+                    placeholder="Name"
+                    type="text"
+                    id="floatingName"
+                    name="name"
+                    value={formState.name}
+                    onChange={handleChange}/>
+                    <label htmlFor="floatingName">Name</label>
+                <br/>
+                </div>
+                <div className="form-floating mb-2">
+                <input
+                    className="form-control"
+                    placeholder="Email"
+                    type="email"
+                    id="floatingInput"
+                    name="email"
+                    value={formState.email}
+                    onChange={handleChange}/>
+                    <label htmlFor="floatingInput">Email address</label>
+                <br/>
+                </div>
+                <div className="form-floating mb-2">
+                <input
+                    className="form-control"
+                    placeholder="Password"
+                    type="password"
+                    id="floatingPassword"
+                    name="password"
+                    value={formState.password}
+                    onChange={handleChange}/>
+                    <label htmlFor="floatingPassword">Password</label>
+                <br/>
+                </div>
+                <div className="form-floating mb-2">
+                <input
+                    className="form-control"
+                    placeholder="ConfirmPassword"
+                    type="password"
+                    id="floatingConfirmPassword"
+                    name="confirmPassword"
+                    value={formState.confirmPassword}
+                    onChange={handleChange}/>
+                    <label htmlFor="floatingConfirmPassword">Confirm Password</label>
+                <br/>
+                </div>
+                {error && <div>{error}</div>}
+                <div className="d-grid d-md-flex justify-content-md-center">
+                <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+                    Go
+                </button>
+                </div>
+            </form>
+            </div>
+        </>
     );
 };
 
