@@ -7,7 +7,7 @@ interface FormState {
     password: string;
 }
 
-const Login = ({state}) => {
+const Login = ({setState}) => {
     const [formState, setFormState] = React.useState<FormState>({
         name: '',
         email: '',
@@ -36,8 +36,8 @@ const Login = ({state}) => {
             });
 
             if(response.data.message == 'ok') {
-                state.user = response.data.user;
-                state.currentView = 'register';
+                setState.user = response.data.user;
+                setState.currentView = 'register';
             }
         } catch (error) {
             setError(error.message);
