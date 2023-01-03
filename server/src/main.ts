@@ -179,6 +179,16 @@ app.post("/comment/:id",
             inResponse.send("error");
         }
     });
+app.get("/blogpost/comments/:id",
+    async (inRequest: Request, inResponse: Response) => {
+        try {
+            const comments = await Comment.find({'postID' : inRequest.params['id']});
+            if (comments) inResponse.json(comments);
+            else inResponse.send("DB error");
+        } catch (inError) {
+            inResponse.send("error");
+        }
+    });
 
 
 app.listen(8080);
