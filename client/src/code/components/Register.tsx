@@ -46,7 +46,10 @@ const Register = ({setState}) => {
                 password: formState.password,
             });
 
-            setState({view: "login"})
+            if (response.data!="ok") {
+                throw new Error("User with same email already exits.");
+            }
+            else setState({view: "login"})
             // Do something with the response data
             console.log(response.data);
         } catch (error) {
