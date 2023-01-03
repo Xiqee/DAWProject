@@ -93,6 +93,7 @@ app.post("/blogpost",
             const blogpost = await new BlogPost({
                 authorID: authorID,
                 text: text,
+                likes:0
             });
             if (await blogpost.save()) inResponse.send("done")
             else inResponse.send("DB error")
@@ -123,7 +124,7 @@ Update blog post method which increments the likes value of the post with given 
 app.post("/blogpost/like/:id",
     async (inRequest: Request, inResponse: Response) => {
         try {
-            await BlogPost.findOneAndUpdate({_id :inRequest.params.id}, {$inc : {'post.likes' : 1}});
+            await BlogPost.findByIdAndUpdate(inRequest.params['id'], {$inc : {'likes' : 1}});
             inResponse.send("done");
         } catch (inError) {
             inResponse.send("error");
