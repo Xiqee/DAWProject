@@ -4,6 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import "bootstrap/dist/css/bootstrap.min.css"
+import Header from "./Header";
 
 interface FormState {
     name: string;
@@ -23,7 +24,7 @@ const Register = ({setState}) => {
     const [isSubmitting, setIsSubmitting] = React.useState(false);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
+        const {name, value} = event.target;
         setFormState((prevState) => ({
             ...prevState,
             [name]: value,
@@ -46,10 +47,9 @@ const Register = ({setState}) => {
                 password: formState.password,
             });
 
-            if (response.data!="ok") {
+            if (response.data != "ok") {
                 throw new Error("User with same email already exits.");
-            }
-            else setState({view: "login"})
+            } else setState({view: "login"})
             // Do something with the response data
             console.log(response.data);
         } catch (error) {
@@ -60,77 +60,81 @@ const Register = ({setState}) => {
     };
 
     return (
-
-        <><Navbar bg="dark" variant="dark">
-            <Container>
-                <Navbar.Brand href="#home">Devour Forum</Navbar.Brand>
-                <Nav className="me-auto">
-                    <Nav.Link href="#home">Home</Nav.Link>
-                    <Nav.Link href="#register">Register</Nav.Link>
-                    <Nav.Link href="#login">Login</Nav.Link>
-                </Nav>
-            </Container>
-        </Navbar>
-            <h1 className="display-6" style={{ paddingTop:'40px', height:'100%', width:'100%', display:'flex', justifyContent:'center' }}>Register</h1>
-            <div style={{ paddingTop:'15px', height:'100%', width:'100%', display:'flex', justifyContent:'center', alignItems:'center'}} >
-            <form onSubmit={handleSubmit} style={{ width:'45%'}}>
-                <div className="form-floating mb-2">
-                <input
-                    className="form-control"
-                    placeholder="Name"
-                    type="text"
-                    id="floatingName"
-                    name="name"
-                    value={formState.name}
-                    onChange={handleChange}/>
-                    <label htmlFor="floatingName">Name</label>
-                <br/>
-                </div>
-                <div className="form-floating mb-2">
-                <input
-                    className="form-control"
-                    placeholder="Email"
-                    type="email"
-                    id="floatingInput"
-                    name="email"
-                    value={formState.email}
-                    onChange={handleChange}/>
-                    <label htmlFor="floatingInput">Email address</label>
-                <br/>
-                </div>
-                <div className="form-floating mb-2">
-                <input
-                    className="form-control"
-                    placeholder="Password"
-                    type="password"
-                    id="floatingPassword"
-                    name="password"
-                    value={formState.password}
-                    onChange={handleChange}/>
-                    <label htmlFor="floatingPassword">Password</label>
-                <br/>
-                </div>
-                <div className="form-floating mb-2">
-                <input
-                    className="form-control"
-                    placeholder="ConfirmPassword"
-                    type="password"
-                    id="floatingConfirmPassword"
-                    name="confirmPassword"
-                    value={formState.confirmPassword}
-                    onChange={handleChange}/>
-                    <label htmlFor="floatingConfirmPassword">Confirm Password</label>
-                <br/>
-                </div>
-                {error && <div>{error}</div>}
-                <div className="d-grid d-md-flex justify-content-md-center">
-                <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-                    Go
-                </button>
-                </div>
-            </form>
+        <div>
+            <Header setState={setState}/>
+            <h1 className="display-6" style={{
+                paddingTop: '40px',
+                height: '100%',
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center'
+            }}>Register</h1>
+            <div style={{
+                paddingTop: '15px',
+                height: '100%',
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+                <form onSubmit={handleSubmit} style={{width: '45%'}}>
+                    <div className="form-floating mb-2">
+                        <input
+                            className="form-control"
+                            placeholder="Name"
+                            type="text"
+                            id="floatingName"
+                            name="name"
+                            value={formState.name}
+                            onChange={handleChange}/>
+                        <label htmlFor="floatingName">Name</label>
+                        <br/>
+                    </div>
+                    <div className="form-floating mb-2">
+                        <input
+                            className="form-control"
+                            placeholder="Email"
+                            type="email"
+                            id="floatingInput"
+                            name="email"
+                            value={formState.email}
+                            onChange={handleChange}/>
+                        <label htmlFor="floatingInput">Email address</label>
+                        <br/>
+                    </div>
+                    <div className="form-floating mb-2">
+                        <input
+                            className="form-control"
+                            placeholder="Password"
+                            type="password"
+                            id="floatingPassword"
+                            name="password"
+                            value={formState.password}
+                            onChange={handleChange}/>
+                        <label htmlFor="floatingPassword">Password</label>
+                        <br/>
+                    </div>
+                    <div className="form-floating mb-2">
+                        <input
+                            className="form-control"
+                            placeholder="ConfirmPassword"
+                            type="password"
+                            id="floatingConfirmPassword"
+                            name="confirmPassword"
+                            value={formState.confirmPassword}
+                            onChange={handleChange}/>
+                        <label htmlFor="floatingConfirmPassword">Confirm Password</label>
+                        <br/>
+                    </div>
+                    {error && <div>{error}</div>}
+                    <div className="d-grid d-md-flex justify-content-md-center">
+                        <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+                            Go
+                        </button>
+                    </div>
+                </form>
             </div>
-        </>
+        </div>
     );
 };
 
