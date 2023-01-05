@@ -4,8 +4,22 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import Header from "./Header";
 import {useEffect, useState} from "react";
 import {Accordion} from "react-bootstrap";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faThumbsUp} from '@fortawesome/free-solid-svg-icons'
+import jwt from "jwt-decode";
+
+interface MyToken {
+    createdAt: string,
+    email: string,
+    exp: number,
+    iat: number,
+    password: string,
+    updatedAt: string,
+    username: string,
+    __v: number,
+    _id: string,
+
+}
 
 const Posts = ({setState}) => {
         const [posts, setPosts] = useState([]);
@@ -20,7 +34,9 @@ const Posts = ({setState}) => {
                     console.log(err.message);
                 });
         }, []);
-
+        const userToken = localStorage.getItem("user")
+        const user = userToken ? jwt<MyToken>(JSON.parse(userToken).accessToken) : false;
+        const userID = user ? user._id : false;
         return (
             <div>
                 <Header setState={setState}/>
@@ -47,8 +63,17 @@ const Posts = ({setState}) => {
                                 <Accordion.Body>
                                     {post.text}
                                     <p>
-                                        <FontAwesomeIcon icon={faThumbsUp} />
-                                        <b> {post.likes}</b>
+                                        <button onClick={() => axios.post("http://localhost:8000/blogpost/like/"+ post.id)}>
+                                            <FontAwesomeIcon icon={faThumbsUp}/>
+                                            <b> {post.likes}</b>
+                                        </button>
+                                    </p>
+                                    <p>
+                                        {userID == post.authorID &&
+                                            <button onClick={() => setState({view: "updatePost", postID: post.id})}>
+                                                Update Post
+                                            </button>
+                                        }
                                     </p>
                                 </Accordion.Body>
                             </Accordion.Item>

@@ -57,7 +57,10 @@ app.post("/register", async (inRequest: Request, inResponse: Response) => {
     }
 });
 
-// Log in
+/*
+Login method which takes an HTTP request with email and password.
+If the given data matches a user's data a jwt token is created
+ */
 app.post("/login", async (inRequest: Request, inResponse: Response) => {
     const { email, password } = inRequest.body;
 
@@ -93,33 +96,6 @@ app.post("/login", async (inRequest: Request, inResponse: Response) => {
     }
     else inResponse.send("Wrong")
 });
-
-// /*
-// Login method which takes an HTTP request with email and password.
-// If the given data matches a user's data a jwt token is created
-//  */
-// app.post("/login",
-//     async (inRequest: Request, inResponse: Response) => {
-//         try {
-//             const {email, password} = inRequest.body;
-//             const user = await User.findOne({
-//                 email,
-//                 password: sha256(password + process.env.SALT),
-//             });
-//
-//             if (user) {
-//                 const token = await jwt.sign(user.toObject(), process.env.SECRET);
-//                 inResponse.json({
-//                     user: user,
-//                     message: "ok",
-//                     token,
-//                 });
-//             } else inResponse.send("wrong credentials")
-//
-//         } catch (inError) {
-//             inResponse.send("error");
-//         }
-//     });
 
 /*
 User get method that gets the user with the given id
