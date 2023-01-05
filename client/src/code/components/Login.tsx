@@ -34,16 +34,14 @@ const Login = ({setState}) => {
         setError('');
 
         try {
-            const response = axios
-                .post("localhost:8000/login", {
-                    email: formState.email,
-                    password: formState.password,
-                })
-                .then((response) => {
-                    if (response.data.accessToken) {
-                        localStorage.setItem("user", JSON.stringify(response.data));
-                    }
-                });
+            const response = await axios.post("localhost:8000/login", {
+                email: formState.email,
+                password: formState.password,
+            })
+
+            if (response.data.accessToken) {
+                localStorage.setItem("user", JSON.stringify(response.data));
+            }
         } catch (error) {
             setError(error.message);
         } finally {
