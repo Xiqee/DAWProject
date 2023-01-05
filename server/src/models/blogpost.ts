@@ -4,7 +4,7 @@ const BlogPostSchema = new mongoose.Schema(
     {
         author: {
             type: String,
-            required: "AuthorID is required!",
+            required: "Author is required!",
         },
         authorID: {
             type: String,

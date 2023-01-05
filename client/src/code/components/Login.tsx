@@ -41,7 +41,8 @@ const Login = ({setState}) => {
 
             if (response.data.message == 'ok') {
                 setState.user = response.data.user;
-                setState.currentView = 'register';
+                localStorage.setItem("user", JSON.stringify(response.data.token));
+                setState({view: "posts"});
             }
         } catch (error) {
             setError(error.message);

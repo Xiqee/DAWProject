@@ -3,7 +3,9 @@ import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css"
 import Header from "./Header";
 import {useEffect, useState} from "react";
-
+import {Accordion} from "react-bootstrap";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 
 const Posts = ({setState}) => {
         const [posts, setPosts] = useState([]);
@@ -37,14 +39,20 @@ const Posts = ({setState}) => {
                     justifyContent: 'center',
                     alignItems: 'center'
                 }}>
-                    <div>
-                        {posts?.map((post) => (
-                            <div>
-                                <h3>{post.text}</h3>
-                                <h3>{post.likes}</h3>
-                            </div>
-                        ))}
-                    </div>
+                    {posts?.map((post) => (
+                        <Accordion defaultActiveKey="0" style={{width: '50%'}}>
+                            <Accordion.Item eventKey="0">
+                                <Accordion.Header>{post.author}</Accordion.Header>
+                                <Accordion.Body>
+                                    {post.text}
+                                    <p>
+                                        <FontAwesomeIcon icon={faThumbsUp} />
+                                        {post.likes}
+                                    </p>
+                                </Accordion.Body>
+                            </Accordion.Item>
+                        </Accordion>
+                    ))}
                 </div>
             </div>
         );
