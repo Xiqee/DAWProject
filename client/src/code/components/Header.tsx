@@ -40,7 +40,7 @@ const Header = ({setState}) => {
                     {user &&
                         <div>
                             <Nav.Link onClick={() => setState({view: "home"})}>Welcome {username}</Nav.Link>
-                            <Nav.Link onClick={() => setState({view: "CreatePost"})}>Create Post</Nav.Link>
+                            <Nav.Link onClick={() => setState({view: "createPost"})}>Create Post</Nav.Link>
                             <Nav.Link onClick={logout}>Logout</Nav.Link>
                         </div>
                     }
