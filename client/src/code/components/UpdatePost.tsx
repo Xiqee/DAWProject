@@ -25,14 +25,14 @@ interface MyToken {
 
 }
 
-const UpdatePost = ({setState}) => {
+const UpdatePost = (props,{setState}) => {
         const [postState, setPostState] = React.useState<PostState>({
             text: '',
         });
         const [error, setError] = React.useState('');
         const [isSubmitting, setIsSubmitting] = React.useState(false);
         useEffect(() => {
-            axios.get("http://localhost:8000/blogpost/"+setState.postID)
+            axios.get('http://localhost:8000/blogpost/'+props.postID)
                 .then((res) => res.data)
                 .then((data) => {
                     console.log(data);
@@ -61,12 +61,13 @@ const UpdatePost = ({setState}) => {
             const userID = user ? user._id : false;
 
             try {
-                const response = await axios.post("http://localhost:8000/blogpost/"+setState.postID, {
+                const response = await axios.post('http://localhost:8000/blogpost/'+props.postID, {
                     authorID: userID,
                     text: postState.text,
                 });
-                console.log(setState.postID);
                 setState({view: "posts"})
+                // Do something with the response data
+                console.log(response.data);
             } catch (error) {
                 setError(error.message);
             } finally {
