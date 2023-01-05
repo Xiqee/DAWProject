@@ -2,9 +2,13 @@ import mongoose from "mongoose"
 
 const BlogPostSchema = new mongoose.Schema(
     {
+        author: {
+            type: String,
+            required: "AuthorID is required!",
+        },
         authorID: {
             type: String,
-            required: "Author is required!",
+            required: "AuthorID is required!",
         },
         text:{
             type: String,

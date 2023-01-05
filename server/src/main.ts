@@ -105,7 +105,9 @@ app.post("/blogpost",
     async (inRequest: Request, inResponse: Response) => {
         try {
             const {authorID, text} = inRequest.body;
+            const user = await User.findById(authorID);
             const blogpost = await new BlogPost({
+                authorName: user.username,
                 authorID: authorID,
                 text: text,
                 likes:0
