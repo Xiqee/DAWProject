@@ -41,6 +41,7 @@ const Login = ({setState}) => {
 
             if (response.data.accessToken) {
                 localStorage.setItem("user", JSON.stringify(response.data));
+                setState({view:"posts"})
             }
         } catch (error) {
             setError(error.message);
