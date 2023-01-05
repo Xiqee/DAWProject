@@ -83,6 +83,21 @@ app.post("/login",
             inResponse.send("error");
         }
     });
+
+/*
+User get method that gets the user with the given id
+ */
+app.get("/user/:id",
+    async (inRequest: Request, inResponse: Response) => {
+        try {
+            const user = await User.findById(inRequest.params.id);
+            if (user) inResponse.json(user);
+            else inResponse.send("DB error");
+        } catch (inError) {
+            inResponse.send("error");
+        }
+    });
+
 /*
 Create blog post method which takes an HTTP request with authorID and text.
  */
