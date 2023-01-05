@@ -18,7 +18,7 @@ function App(){
     else if(state.view == "register") return <Register setState={setState}/>
     else if(state.view == "login") return <Login setState={setState}/>
     else if(state.view == "posts") return <Posts setState={setState}/>
-    else if(state.view == "createPosts") return <CreatePost setState={setState}/>
+    else if(state.view == "createPost") return <CreatePost setState={setState}/>
 
 }
 // Render the UI.

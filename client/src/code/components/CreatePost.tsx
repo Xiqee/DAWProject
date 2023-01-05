@@ -32,7 +32,7 @@ const CreatePost = ({setState}) => {
         const [error, setError] = React.useState('');
         const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-        const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
             const {name, value} = event.target;
             setPostState((prevState) => ({
                 ...prevState,
@@ -73,7 +73,7 @@ const CreatePost = ({setState}) => {
                     width: '100%',
                     display: 'flex',
                     justifyContent: 'center'
-                }}>Posts</h1>
+                }}>Write your post!</h1>
                 <div style={{
                     paddingTop: '15px',
                     height: '100%',
@@ -82,20 +82,23 @@ const CreatePost = ({setState}) => {
                     justifyContent: 'center',
                     alignItems: 'center'
                 }}>
-                    {posts?.map((post) => (
-                        <Accordion defaultActiveKey="0" style={{width: '50%'}}>
-                            <Accordion.Item eventKey="0">
-                                <Accordion.Header>{post.author}</Accordion.Header>
-                                <Accordion.Body>
-                                    {post.text}
-                                    <p>
-                                        <FontAwesomeIcon icon={faThumbsUp}/>
-                                        {post.likes}
-                                    </p>
-                                </Accordion.Body>
-                            </Accordion.Item>
-                        </Accordion>
-                    ))}
+                    <form onSubmit={handleSubmit} style={{width: '45%'}}>
+                        <div style={{textAlign: "center"}}>
+                        <textarea
+                            rows={5}
+                            cols={60}
+                            name="text"
+                            value={postState.text}
+                            onChange={handleChange}>
+                        </textarea>
+                        </div>
+                        {error && <div>{error}</div>}
+                        <div className="d-grid d-md-flex justify-content-md-center">
+                            <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+                                Post
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         );

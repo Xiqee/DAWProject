@@ -34,20 +34,21 @@ const Posts = ({setState}) => {
                 <div style={{
                     paddingTop: '15px',
                     height: '100%',
-                    width: '100%',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center'
+                    width: '850px',
+                    display: 'block',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+
                 }}>
                     {posts?.map((post) => (
-                        <Accordion defaultActiveKey="0" style={{width: '50%'}}>
+                        <Accordion defaultActiveKey="0" style={{width: '100%', paddingTop: "10px"}}>
                             <Accordion.Item eventKey="0">
                                 <Accordion.Header>{post.author}</Accordion.Header>
                                 <Accordion.Body>
                                     {post.text}
                                     <p>
                                         <FontAwesomeIcon icon={faThumbsUp} />
-                                        {post.likes}
+                                        <b> {post.likes}</b>
                                     </p>
                                 </Accordion.Body>
                             </Accordion.Item>
