@@ -1,8 +1,5 @@
 import * as React from 'react';
 import axios from 'axios';
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
 import "bootstrap/dist/css/bootstrap.min.css"
 import Header from "./Header";
 
@@ -41,7 +38,7 @@ const Register = ({setState}) => {
                 throw new Error('Passwords do not match');
             }
 
-            const response = await axios.post('http://localhost:8080/register', {
+            const response = await axios.post('http://localhost:8000/register', {
                 username: formState.name,
                 email: formState.email,
                 password: formState.password,

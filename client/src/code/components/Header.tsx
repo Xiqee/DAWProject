@@ -9,7 +9,7 @@ const Header = ({setState}) => {
             <Container>
                 <Navbar.Brand onClick={ () => setState({view: "home"})}>Devour Forum</Navbar.Brand>
                 <Nav className="me-auto">
-                    <Nav.Link onClick={ () => setState({view: "home"})}>Home</Nav.Link>
+                    <Nav.Link onClick={ () => setState({view: "posts"})}>Home</Nav.Link>
                     <Nav.Link onClick={ () => setState({view: "register"})}>Register</Nav.Link>
                     <Nav.Link onClick={ () => setState({view: "login"})}>Login</Nav.Link>
                 </Nav>

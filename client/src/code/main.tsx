@@ -9,12 +9,14 @@ import ReactDOM from "react-dom";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import WelcomeView from "./components/WelcomeView";
+import Posts from "./components/Posts";
 
 function App(){
     const [state, setState] = useState({view: "home"});
     if(state.view == "home") return <WelcomeView setState={setState}/>
     else if(state.view == "register") return <Register setState={setState}/>
     else if(state.view == "login") return <Login setState={setState}/>
+    else if(state.view == "posts") return <Posts setState={setState}/>
 
 }
 // Render the UI.
