@@ -28,8 +28,6 @@ const Header = ({setState}) => {
     const userToken = localStorage.getItem("user")
     const user = userToken? jwt<MyToken>(JSON.parse(userToken).accessToken) : false;
     const username = user? user.username : false;
-    console.log("token" + userToken);
-    console.log(user);
     return (
         <Navbar bg="dark" variant="dark">
             <Container>

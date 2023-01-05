@@ -63,14 +63,14 @@ const Posts = ({setState}) => {
                                 <Accordion.Body>
                                     {post.text}
                                     <p>
-                                        <button onClick={() => axios.post("http://localhost:8000/blogpost/like/"+ post.id)}>
+                                        <button onClick={() => axios.post("http://localhost:8000/blogpost/like/"+ post._id)}>
                                             <FontAwesomeIcon icon={faThumbsUp}/>
                                             <b> {post.likes}</b>
                                         </button>
                                     </p>
                                     <p>
                                         {userID == post.authorID &&
-                                            <button onClick={() => setState({view: "updatePost", postID: post.id})}>
+                                            <button onClick={() => setState({view: "updatePost", postID: post._id})}>
                                                 Update Post
                                             </button>
                                         }

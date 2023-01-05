@@ -20,7 +20,7 @@ function App(){
     else if(state.view == "login") return <Login setState={setState}/>
     else if(state.view == "posts") return <Posts setState={setState}/>
     else if(state.view == "createPost") return <CreatePost setState={setState}/>
-    else if(state.view == "updatePost") return <UpdatePost setState={setState}/>
+    else if(state.view == "updatePost") return <UpdatePost setState={setState} postID={state.postID}/>
 }
 // Render the UI.
 const root = ReactDOM.createRoot(document.getElementById('root'));
