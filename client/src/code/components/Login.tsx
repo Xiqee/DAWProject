@@ -34,7 +34,7 @@ const Login = ({setState}) => {
         setError('');
 
         try {
-            const response = await axios.post("localhost:8000/login", {
+            const response = await axios.post("http://localhost:8000/login", {
                 email: formState.email,
                 password: formState.password,
             })

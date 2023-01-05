@@ -70,7 +70,7 @@ app.post("/login", async (inRequest: Request, inResponse: Response) => {
     if(user) {
         // Send JWT access token
         const accessToken = await jwt.sign(
-            {email},
+            user.toObject(),
             process.env.ACCESS_TOKEN_SECRET,
             {
                 expiresIn: "1m",
@@ -79,7 +79,7 @@ app.post("/login", async (inRequest: Request, inResponse: Response) => {
 
         // Refresh token
         const refreshToken = await jwt.sign(
-            {email},
+            user.toObject(),
             process.env.REFRESH_TOKEN_SECRET,
             {
                 expiresIn: "15m",
