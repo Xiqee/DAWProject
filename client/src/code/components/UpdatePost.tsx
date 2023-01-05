@@ -25,7 +25,7 @@ interface MyToken {
 
 }
 
-const UpdatePost = (props,{setState}) => {
+const UpdatePost = (props) => {
         const [postState, setPostState] = React.useState<PostState>({
             text: '',
         });
@@ -65,7 +65,7 @@ const UpdatePost = (props,{setState}) => {
                     authorID: userID,
                     text: postState.text,
                 });
-                setState({view: "posts"})
+                props.setState({view: "posts"})
                 // Do something with the response data
                 console.log(response.data);
             } catch (error) {
@@ -77,7 +77,7 @@ const UpdatePost = (props,{setState}) => {
 
         return (
             <div>
-                <Header setState={setState}/>
+                <Header setState={props.state}/>
                 <h1 className="display-6" style={{
                     paddingTop: '40px',
                     height: '100%',

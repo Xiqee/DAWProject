@@ -4,8 +4,6 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import Header from "./Header";
 import {useEffect, useState} from "react";
 import {Accordion} from "react-bootstrap";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faThumbsUp} from '@fortawesome/free-solid-svg-icons'
 import jwt from "jwt-decode";
 
 interface MyToken {
@@ -21,7 +19,7 @@ interface MyToken {
 
 }
 
-const Posts = ({setState}) => {
+const Posts = (props) => {
         const [posts, setPosts] = useState([]);
         useEffect(() => {
             axios.get('http://localhost:8000/blogpost')
@@ -37,9 +35,10 @@ const Posts = ({setState}) => {
         const userToken = localStorage.getItem("user")
         const user = userToken ? jwt<MyToken>(JSON.parse(userToken).accessToken) : false;
         const userID = user ? user._id : false;
+
         return (
             <div>
-                <Header setState={setState}/>
+                <Header setState={props.state}/>
                 <h1 className="display-6" style={{
                     paddingTop: '40px',
                     height: '100%',
@@ -63,14 +62,8 @@ const Posts = ({setState}) => {
                                 <Accordion.Body>
                                     {post.text}
                                     <p>
-                                        <button onClick={() => axios.post("http://localhost:8000/blogpost/like/"+ post._id)}>
-                                            <FontAwesomeIcon icon={faThumbsUp}/>
-                                            <b> {post.likes}</b>
-                                        </button>
-                                    </p>
-                                    <p>
                                         {userID == post.authorID &&
-                                            <button onClick={() => setState({view: "updatePost", postID: post._id})}>
+                                            <button onClick={() => props.setState({view: "updatePost", postID: post._id})}>
                                                 Update Post
                                             </button>
                                         }
