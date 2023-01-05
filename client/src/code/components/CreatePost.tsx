@@ -25,7 +25,7 @@ interface MyToken {
 
 }
 
-const Posts = ({setState}) => {
+const CreatePost = ({setState}) => {
         const [postState, setPostState] = React.useState<PostState>({
             text: '',
         });
@@ -101,4 +101,4 @@ const Posts = ({setState}) => {
         );
     }
 ;
-export default Posts;
+export default CreatePost;
