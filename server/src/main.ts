@@ -57,32 +57,69 @@ app.post("/register", async (inRequest: Request, inResponse: Response) => {
     }
 });
 
-/*
-Login method which takes an HTTP request with email and password.
-If the given data matches a user's data a jwt token is created
- */
-app.post("/login",
-    async (inRequest: Request, inResponse: Response) => {
-        try {
-            const {email, password} = inRequest.body;
-            const user = await User.findOne({
-                email,
-                password: sha256(password + process.env.SALT),
-            });
+// Log in
+app.post("/login", async (inRequest: Request, inResponse: Response) => {
+    const { email, password } = inRequest.body;
 
-            if (user) {
-                const token = await jwt.sign(user.toObject(), process.env.SECRET);
-                inResponse.json({
-                    user: user,
-                    message: "ok",
-                    token,
-                });
-            } else inResponse.send("wrong credentials")
-
-        } catch (inError) {
-            inResponse.send("error");
-        }
+    // Look for user email in the database
+    const user = await User.findOne({
+        email,
+        password: sha256(password + process.env.SALT),
     });
+
+    if(user) {
+        // Send JWT access token
+        const accessToken = await jwt.sign(
+            {email},
+            process.env.ACCESS_TOKEN_SECRET,
+            {
+                expiresIn: "1m",
+            }
+        );
+
+        // Refresh token
+        const refreshToken = await jwt.sign(
+            {email},
+            process.env.REFRESH_TOKEN_SECRET,
+            {
+                expiresIn: "15m",
+            }
+        );
+
+        inResponse.json({
+            accessToken,
+            refreshToken,
+        });
+    }
+    else inResponse.send("Wrong")
+});
+
+// /*
+// Login method which takes an HTTP request with email and password.
+// If the given data matches a user's data a jwt token is created
+//  */
+// app.post("/login",
+//     async (inRequest: Request, inResponse: Response) => {
+//         try {
+//             const {email, password} = inRequest.body;
+//             const user = await User.findOne({
+//                 email,
+//                 password: sha256(password + process.env.SALT),
+//             });
+//
+//             if (user) {
+//                 const token = await jwt.sign(user.toObject(), process.env.SECRET);
+//                 inResponse.json({
+//                     user: user,
+//                     message: "ok",
+//                     token,
+//                 });
+//             } else inResponse.send("wrong credentials")
+//
+//         } catch (inError) {
+//             inResponse.send("error");
+//         }
+//     });
 
 /*
 User get method that gets the user with the given id
