@@ -59,7 +59,7 @@ const Posts = ({setState}) => {
                         <Accordion defaultActiveKey="0" style={{width: '100%', paddingTop: "10px"}}>
                             <Accordion.Item eventKey="0">
                                 <Accordion.Header>
-                                    <img src="./public/images/0.jpg" />
+                                    <img src={require('../../../public/images/'+axios.get('http://localhost:8000/user/'+post.authorID).then(res=>res.data.image))}  alt={" "}/>
                                     {post.author}
                                 </Accordion.Header>
                                 <Accordion.Body>
