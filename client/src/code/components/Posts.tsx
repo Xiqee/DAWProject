@@ -25,7 +25,6 @@ const Posts = ({setState}) => {
             axios.get('http://localhost:8000/blogpost')
                 .then((res) => res.data)
                 .then((data) => {
-                    console.log(data);
                     setPosts(data);
                 })
                 .catch((err) => {

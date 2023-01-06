@@ -34,7 +34,7 @@ const Register = ({setState}) => {
         setError('');
 
         try {
-            var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+            const validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
             if(formState.name.length<1 || formState.email.length<1 || formState.password.length<1 || formState.confirmPassword.length <1){
                 throw new Error('Please fill in all fields');
             }
