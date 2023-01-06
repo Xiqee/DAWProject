@@ -29,17 +29,30 @@ const BlogPost = mongoose.model("BlogPost");
 const Comment = mongoose.model("Comment");
 
 /*
+/////////////////// USER HTTP METHODS //////////////////////////////////
+ */
+//Creates random int between min and max (both inclusive)
+function getRandomInt(min: number, max: number) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+/*
 Register method which takes an HTTP request with username, email and password.
 If a user with the email already exists it isn't added.
+Each user gets a random image
 Otherwise, the user is added to the DB with a hashed password(SHA256)
  */
+
 app.post("/register", async (inRequest: Request, inResponse: Response) => {
     try {
         const {username, email, password} = inRequest.body;
+        //Checks if a user with the given email exists
         const userExists = await User.findOne({
             email,
         });
-
+        //If a user with the email exists, creates a user with the email.
         if (userExists) inResponse.send("User with same email already exits.");
 
         else {
@@ -47,6 +60,7 @@ app.post("/register", async (inRequest: Request, inResponse: Response) => {
                 username,
                 email,
                 password: sha256(password + process.env.SALT),
+                image: `${getRandomInt(0, 7)}.jpg`
             });
 
             await user.save();
@@ -62,7 +76,7 @@ Login method which takes an HTTP request with email and password.
 If the given data matches a user's data a jwt token is created
  */
 app.post("/login", async (inRequest: Request, inResponse: Response) => {
-    const { email, password } = inRequest.body;
+    const {email, password} = inRequest.body;
 
     // Look for user email in the database
     const user = await User.findOne({
@@ -70,7 +84,7 @@ app.post("/login", async (inRequest: Request, inResponse: Response) => {
         password: sha256(password + process.env.SALT),
     });
 
-    if(user) {
+    if (user) {
         // Send JWT access token
         const accessToken = await jwt.sign(
             user.toObject(),
@@ -93,8 +107,7 @@ app.post("/login", async (inRequest: Request, inResponse: Response) => {
             accessToken,
             refreshToken,
         });
-    }
-    else inResponse.send("Wrong")
+    } else inResponse.send("Wrong")
 });
 
 /*
@@ -112,6 +125,9 @@ app.get("/user/:id",
     });
 
 /*
+/////////////////// BLOG POST HTTP METHODS //////////////////////////////////
+ */
+/*
 Create blog post method which takes an HTTP request with authorID and text.
  */
 app.post("/blogpost",
@@ -123,7 +139,6 @@ app.post("/blogpost",
                 author: user.username,
                 authorID: authorID,
                 text: text,
-                likes:0
             });
             if (await blogpost.save()) inResponse.send("done")
             else inResponse.send("DB error")
@@ -148,19 +163,6 @@ app.post("/blogpost/:id",
             inResponse.send("error");
         }
     });
-/*
-Update blog post method which increments the likes value of the post with given ID.
- */
-app.post("/blogpost/like/:id",
-    async (inRequest: Request, inResponse: Response) => {
-        try {
-            await BlogPost.findByIdAndUpdate(inRequest.params['id'], {$inc : {'likes' : 1}});
-            inResponse.send("done");
-        } catch (inError) {
-            inResponse.send("error");
-        }
-    });
-
 
 /*
 Blogpost get method that gets all blogposts from the db.
@@ -191,36 +193,7 @@ app.get("/blogpost/:id",
         }
     });
 
-/*
-Create blog post method which takes an HTTP request with postID, authorID and text.
- */
-app.post("/comment/:id",
-    async (inRequest: Request, inResponse: Response) => {
-        try {
-            const {authorID, text} = inRequest.body;
-            const comment = await new Comment( {
-                postID: inRequest.params.id,
-                authorID: authorID,
-                text: text,
-            });
-            if (await comment.save()) inResponse.send("done")
-            else inResponse.send("DB error")
-        } catch (inError) {
-            inResponse.send("error");
-        }
-    });
-app.get("/blogpost/comments/:id",
-    async (inRequest: Request, inResponse: Response) => {
-        try {
-            const comments = await Comment.find({'postID' : inRequest.params['id']});
-            if (comments) inResponse.json(comments);
-            else inResponse.send("DB error");
-        } catch (inError) {
-            inResponse.send("error");
-        }
-    });
-
-
+//Run server on port 8000
 app.listen(8000);
 
 
