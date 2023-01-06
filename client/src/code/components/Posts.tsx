@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import Header from "./Header";
 import {useEffect, useState} from "react";
 import {Accordion} from "react-bootstrap";
+import Button from 'react-bootstrap/Button';
 import jwt from "jwt-decode";
 
 interface MyToken {
@@ -57,14 +58,19 @@ const Posts = ({setState}) => {
                     {posts?.map((post) => (
                         <Accordion defaultActiveKey="0" style={{width: '100%', paddingTop: "10px"}}>
                             <Accordion.Item eventKey="0">
-                                <Accordion.Header>{post.author}</Accordion.Header>
+                                <Accordion.Header>
+                                    <img src="./public/images/0.jpg" />
+                                    {post.author}
+                                </Accordion.Header>
                                 <Accordion.Body>
-                                    {post.text}
+                                    <p>{post.text}</p>
+                                    <p>Created at: {post.createdAt.split('T')[0]}  {post.createdAt.split('T')[1].slice(0, -2)}<br />
+                                        Updated at: {post.updatedAt.split('T')[0]}  {post.updatedAt.split('T')[1].slice(0, -2)}</p>
                                     <p>
                                         {userID == post.authorID &&
-                                            <button onClick={() => setState({view: "updatePost", postID: post._id})}>
+                                            <Button variant="outline-primary" onClick={() => setState({view: "updatePost", postID: post._id})}>
                                                 Update Post
-                                            </button>
+                                            </Button>
                                         }
                                     </p>
                                 </Accordion.Body>
