@@ -14,10 +14,6 @@ const BlogPostSchema = new mongoose.Schema(
             type: String,
             required: "Text is required!",
         },
-        likes:{
-            type: Number,
-            required: "Likes are required!"
-        }
     },
     { timestamps: true }
 );
