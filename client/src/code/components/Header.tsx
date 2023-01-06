@@ -36,14 +36,14 @@ const Header = ({setState}) => {
                     <Nav.Link onClick={() => setState({view: "posts"})}>Home</Nav.Link>
 
                     {user &&
-                        <div>
+                        <div style={{ display:"flex", justifyContent:"left"}}>
                             <Nav.Link onClick={() => setState({view: "home"})}>Welcome {username}</Nav.Link>
                             <Nav.Link onClick={() => setState({view: "createPost"})}>Create Post</Nav.Link>
                             <Nav.Link onClick={logout}>Logout</Nav.Link>
                         </div>
                     }
                     {!user &&
-                        <div>
+                        <div style={{ display:"flex", justifyContent:"left"}}>
                             <Nav.Link onClick={() => setState({view: "register"})}>Register</Nav.Link>
                             <Nav.Link onClick={() => setState({view: "login"})}>Login</Nav.Link>
                         </div>
