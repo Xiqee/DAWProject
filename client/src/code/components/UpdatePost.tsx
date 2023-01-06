@@ -2,16 +2,14 @@ import * as React from 'react';
 import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css"
 import Header from "./Header";
-import {useEffect, useState} from "react";
-import {Accordion} from "react-bootstrap";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faThumbsUp} from '@fortawesome/free-solid-svg-icons'
+import {useEffect} from "react";
 import jwt from "jwt-decode";
 
+//interface do state do post
 interface PostState {
     text: string,
 }
-
+//interface do token associado a um user
 interface MyToken {
     createdAt: string,
     email: string,
