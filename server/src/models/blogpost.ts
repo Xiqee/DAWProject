@@ -14,6 +14,10 @@ const BlogPostSchema = new mongoose.Schema(
             type: String,
             required: "Text is required!",
         },
+        authorImage:{
+            type: String,
+            required: "Image is required"
+        }
     },
     { timestamps: true }
 );

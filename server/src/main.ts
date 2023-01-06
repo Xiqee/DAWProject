@@ -139,6 +139,7 @@ app.post("/blogpost",
                 author: user.username,
                 authorID: authorID,
                 text: text,
+                authorImage: user.image
             });
             if (await blogpost.save()) inResponse.send("done")
             else inResponse.send("DB error")
