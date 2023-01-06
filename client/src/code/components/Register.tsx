@@ -34,9 +34,17 @@ const Register = ({setState}) => {
         setError('');
 
         try {
+            var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+            if(formState.name.length<1 || formState.email.length<1 || formState.password.length<1 || formState.confirmPassword.length <1){
+                throw new Error('Please fill in all fields');
+            }
+            if (!formState.email.match(validRegex) ) {
+                throw new Error('Email wrong format');
+            }
             if (formState.password !== formState.confirmPassword) {
                 throw new Error('Passwords do not match');
             }
+
 
             const response = await axios.post('http://localhost:8000/register', {
                 username: formState.name,

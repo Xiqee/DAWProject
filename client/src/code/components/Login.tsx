@@ -6,14 +6,12 @@ import Nav from "react-bootstrap/Nav";
 import Header from "./Header";
 
 interface FormState {
-    name: string;
     email: string;
     password: string;
 }
 
 const Login = ({setState}) => {
     const [formState, setFormState] = React.useState<FormState>({
-        name: '',
         email: '',
         password: '',
     });
@@ -38,7 +36,9 @@ const Login = ({setState}) => {
                 email: formState.email,
                 password: formState.password,
             })
-
+            if(formState.email.length<1 || formState.password.length<1){
+                throw new Error('Please fill in all fields');
+            }
             if (response.data.accessToken) {
                 localStorage.setItem("user", JSON.stringify(response.data));
                 setState({view:"posts"})
