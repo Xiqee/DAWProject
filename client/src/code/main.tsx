@@ -1,6 +1,4 @@
-// Style imports.
-import "../css/main.css";
-//
+
 // React imports.
 import React, {useState} from "react";
 import ReactDOM from "react-dom";
