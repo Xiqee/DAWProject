@@ -10,6 +10,10 @@ import Posts from "./components/Posts";
 import CreatePost from "./components/CreatePost";
 import UpdatePost from "./components/UpdatePost";
 
+/*
+    Componente principal da aplicacao, que e responsavel por renderizar os componentes
+    corretos de acordo com o estado atual da aplicacao
+ */
 function App() {
     const [state, setState] = useState({view: "home", postID: ""});
     if (state.view == "home") return <Posts setState={setState}/>

@@ -2,7 +2,7 @@ import * as React from 'react';
 import axios from 'axios';
 import "bootstrap/dist/css/bootstrap.min.css"
 import Header from "./Header";
-
+//interface do state do form
 interface FormState {
     name: string;
     email: string;
@@ -20,6 +20,11 @@ const Register = ({setState}) => {
     const [error, setError] = React.useState('');
     const [isSubmitting, setIsSubmitting] = React.useState(false);
 
+    /*
+     funcao que e chamada quando ocorre
+      um evento de alteracao num elemento HTML Input.
+      Esta funcao atualiza o state de "formState" com o novo valor do campo de entrada
+     */
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = event.target;
         setFormState((prevState) => ({
@@ -28,6 +33,12 @@ const Register = ({setState}) => {
         }));
     };
 
+    /*
+            Funcao que e chamada quando ocorre um evento de envio de formulario,
+            comeca por declarar uma constante "handleSubmit" que e uma funcao que recebe um parametro
+            chamado "event", este e um evento de envio de formulario do tipo "React.FormEvent<HTMLFormElement>"
+
+      */
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setIsSubmitting(true);
@@ -35,6 +46,9 @@ const Register = ({setState}) => {
 
         try {
             const validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+            /*
+                Valida os inputs
+             */
             if(formState.name.length<1 || formState.email.length<1 || formState.password.length<1 || formState.confirmPassword.length <1){
                 throw new Error('Please fill in all fields');
             }
@@ -46,6 +60,10 @@ const Register = ({setState}) => {
             }
 
 
+            /*
+             A funcao "post" e chamada com a URL e um objeto que contem os dados a serem enviados.
+             Os valores dos campos do formulario sao obtidos do estado de "formState".
+             */
             const response = await axios.post('http://localhost:8000/register', {
                 username: formState.name,
                 email: formState.email,

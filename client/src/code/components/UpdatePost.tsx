@@ -42,7 +42,11 @@ const UpdatePost = (props) => {
                     console.log(err.message);
                 });
         }, []);
-
+        /*
+             funcao que e chamada quando ocorre
+              um evento de alteracao num elemento HTML Input.
+              Esta funcao atualiza o state de "formState" com o novo valor do campo de entrada
+         */
         const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
             const {name, value} = event.target;
             setPostState((prevState) => ({
@@ -50,16 +54,29 @@ const UpdatePost = (props) => {
                 [name]: value,
             }));
         };
+    /*
+        Funcao que e chamada quando ocorre um evento de envio de formulario,
+        comeca por declarar uma constante "handleSubmit" que e uma funcao que recebe um parametro
+        chamado "event", este e um evento de envio de formulario do tipo "React.FormEvent<HTMLFormElement>"
 
+    */
         const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
             event.preventDefault();
             setIsSubmitting(true);
             setError('');
 
+            //variavel userToken que verifica se existe umm token associado a "user", se existir fica guardado na variavel
             const userToken = localStorage.getItem("user")
+            //variavel user que decodifica o userToken usando uma funcao jwt
             const user = userToken ? jwt<MyToken>(JSON.parse(userToken).accessToken) : false;
+            //variavel userID que serve para armazenar o ID do user associado ao token
             const userID = user ? user._id : false;
 
+            /*
+                Bloco "try-catch", tenta fazer uma solicitacao POST para a url 'http://localhost:8000/blogpost' com os dados authorID e text.
+                Se a solicitacao for bem sucedida, a funcao "setState" e chamada para atualizar o state (mudando a pagina para "posts").
+                Caso contrario a funcao "setError" e chamada pra atualizar o state do erro.
+        */
             try {
                 const response = await axios.post('http://localhost:8000/blogpost/'+props.postID, {
                     authorID: userID,

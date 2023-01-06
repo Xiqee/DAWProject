@@ -7,6 +7,7 @@ import {Accordion} from "react-bootstrap";
 import Button from 'react-bootstrap/Button';
 import jwt from "jwt-decode";
 
+//interface do token associado a um user
 interface MyToken {
     createdAt: string,
     email: string,
@@ -22,6 +23,9 @@ interface MyToken {
 
 const Posts = ({setState}) => {
         const [posts, setPosts] = useState([]);
+        /*
+            Hook "useEffect" e chamado com uma funca de efeito e um array dependencias.
+         */
         useEffect(() => {
             axios.get('http://localhost:8000/blogpost')
                 .then((res) => res.data)
@@ -32,8 +36,12 @@ const Posts = ({setState}) => {
                     console.log(err.message);
                 });
         }, []);
+
+        //variavel userToken que verifica se existe umm token associado a "user", se existir fica guardado na variavel
         const userToken = localStorage.getItem("user")
+        //variavel user que decodifica o userToken usando uma funcao jwt
         const user = userToken ? jwt<MyToken>(JSON.parse(userToken).accessToken) : false;
+        //variavel userID que serve para armazenar o ID do user associado ao token
         const userID = user ? user._id : false;
 
         return (

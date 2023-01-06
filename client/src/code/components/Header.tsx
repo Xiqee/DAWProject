@@ -4,6 +4,7 @@ import Nav from "react-bootstrap/Nav";
 import * as React from "react";
 import jwt from 'jwt-decode'
 
+//interface do token associado a um user
 interface MyToken {
     createdAt : string,
     email: string,
@@ -20,13 +21,20 @@ interface MyToken {
 
 const Header = ({setState}) => {
 
+    /*
+        funcao que remove um item com o nome "user" do armazenamento local do navegador e,
+        recarrega a pagina atual usando o metodo "reload" da propriedade "location" do objeto "window".
+     */
     const logout = () => {
         localStorage.removeItem("user");
         window.location.reload();
     };
 
+    //variavel userToken que verifica se existe umm token associado a "user", se existir fica guardado na variavel
     const userToken = localStorage.getItem("user")
+    //variavel user que decodifica o userToken usando uma funcao jwt
     const user = userToken? jwt<MyToken>(JSON.parse(userToken).accessToken) : false;
+    //variavel userID que serve para armazenar o ID do user associado ao token
     const username = user? user.username : false;
     return (
         <Navbar bg="dark" variant="dark">

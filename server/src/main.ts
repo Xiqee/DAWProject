@@ -30,7 +30,6 @@ app.use("/", express.static(path.join(__dirname, "../../client/dist")))
 //Import Mongo DB models
 require("./models/user")
 require("./models/blogpost")
-require("./models/comment")
 const User = mongoose.model("User");
 const BlogPost = mongoose.model("BlogPost");
 
