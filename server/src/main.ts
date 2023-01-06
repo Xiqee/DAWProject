@@ -2,6 +2,7 @@ import path from "path";
 import express, {Express, Request, Response} from "express";
 import mongoose from "mongoose";
 import {sha256} from "js-sha256";
+
 const jwt = require("jwt-then");
 require("dotenv").config()
 
@@ -28,11 +29,18 @@ const User = mongoose.model("User");
 const BlogPost = mongoose.model("BlogPost");
 const Comment = mongoose.model("Comment");
 
+function getRandomInt(min: number, max: number) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 /*
 Register method which takes an HTTP request with username, email and password.
 If a user with the email already exists it isn't added.
 Otherwise, the user is added to the DB with a hashed password(SHA256)
  */
+
 app.post("/register", async (inRequest: Request, inResponse: Response) => {
     try {
         const {username, email, password} = inRequest.body;
@@ -47,6 +55,7 @@ app.post("/register", async (inRequest: Request, inResponse: Response) => {
                 username,
                 email,
                 password: sha256(password + process.env.SALT),
+                image: `${getRandomInt(0, 7)}.jpg`
             });
 
             await user.save();
@@ -62,7 +71,7 @@ Login method which takes an HTTP request with email and password.
 If the given data matches a user's data a jwt token is created
  */
 app.post("/login", async (inRequest: Request, inResponse: Response) => {
-    const { email, password } = inRequest.body;
+    const {email, password} = inRequest.body;
 
     // Look for user email in the database
     const user = await User.findOne({
@@ -70,7 +79,7 @@ app.post("/login", async (inRequest: Request, inResponse: Response) => {
         password: sha256(password + process.env.SALT),
     });
 
-    if(user) {
+    if (user) {
         // Send JWT access token
         const accessToken = await jwt.sign(
             user.toObject(),
@@ -93,8 +102,7 @@ app.post("/login", async (inRequest: Request, inResponse: Response) => {
             accessToken,
             refreshToken,
         });
-    }
-    else inResponse.send("Wrong")
+    } else inResponse.send("Wrong")
 });
 
 /*
@@ -123,7 +131,7 @@ app.post("/blogpost",
                 author: user.username,
                 authorID: authorID,
                 text: text,
-                likes:0
+                likes: 0
             });
             if (await blogpost.save()) inResponse.send("done")
             else inResponse.send("DB error")
@@ -154,7 +162,7 @@ Update blog post method which increments the likes value of the post with given 
 app.post("/blogpost/like/:id",
     async (inRequest: Request, inResponse: Response) => {
         try {
-            await BlogPost.findByIdAndUpdate(inRequest.params['id'], {$inc : {'likes' : 1}});
+            await BlogPost.findByIdAndUpdate(inRequest.params['id'], {$inc: {'likes': 1}});
             inResponse.send("done");
         } catch (inError) {
             inResponse.send("error");
@@ -198,7 +206,7 @@ app.post("/comment/:id",
     async (inRequest: Request, inResponse: Response) => {
         try {
             const {authorID, text} = inRequest.body;
-            const comment = await new Comment( {
+            const comment = await new Comment({
                 postID: inRequest.params.id,
                 authorID: authorID,
                 text: text,
@@ -212,7 +220,7 @@ app.post("/comment/:id",
 app.get("/blogpost/comments/:id",
     async (inRequest: Request, inResponse: Response) => {
         try {
-            const comments = await Comment.find({'postID' : inRequest.params['id']});
+            const comments = await Comment.find({'postID': inRequest.params['id']});
             if (comments) inResponse.json(comments);
             else inResponse.send("DB error");
         } catch (inError) {
