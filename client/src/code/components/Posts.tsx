@@ -19,7 +19,7 @@ interface MyToken {
 
 }
 
-const Posts = (props) => {
+const Posts = ({setState}) => {
         const [posts, setPosts] = useState([]);
         useEffect(() => {
             axios.get('http://localhost:8000/blogpost')
@@ -38,7 +38,7 @@ const Posts = (props) => {
 
         return (
             <div>
-                <Header setState={props.state}/>
+                <Header setState={setState}/>
                 <h1 className="display-6" style={{
                     paddingTop: '40px',
                     height: '100%',
@@ -63,7 +63,7 @@ const Posts = (props) => {
                                     {post.text}
                                     <p>
                                         {userID == post.authorID &&
-                                            <button onClick={() => props.setState({view: "updatePost", postID: post._id})}>
+                                            <button onClick={() => setState({view: "updatePost", postID: post._id})}>
                                                 Update Post
                                             </button>
                                         }

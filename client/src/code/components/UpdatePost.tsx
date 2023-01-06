@@ -77,7 +77,7 @@ const UpdatePost = (props) => {
 
         return (
             <div>
-                <Header setState={props.state}/>
+                <Header setState={props.setState}/>
                 <h1 className="display-6" style={{
                     paddingTop: '40px',
                     height: '100%',
