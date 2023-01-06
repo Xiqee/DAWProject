@@ -1,5 +1,8 @@
 import mongoose from "mongoose"
-
+/*
+MONGO USER MODEL
+ATTRIBUTES: AUTHOR NAME, AUTHOR ID, CONTENT(text) AND AUTHOR PROFILE PICTURE (authorImage)
+ */
 const BlogPostSchema = new mongoose.Schema(
     {
         author: {
@@ -21,5 +24,5 @@ const BlogPostSchema = new mongoose.Schema(
     },
     { timestamps: true }
 );
-
+//export model
 module.exports = mongoose.model("BlogPost", BlogPostSchema);

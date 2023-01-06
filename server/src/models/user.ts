@@ -1,5 +1,8 @@
 const mongoose = require("mongoose");
-
+/*
+MONGO USER MODEL
+ATTRIBUTES: USERNAME, EMAIL, PASSWORD AND PROFILE PICTURE (image)
+ */
 const userSchema = new mongoose.Schema(
     {
         username: {
@@ -23,5 +26,5 @@ const userSchema = new mongoose.Schema(
         timestamps: true,
     }
 );
-
+//export model
 module.exports = mongoose.model("User", userSchema);

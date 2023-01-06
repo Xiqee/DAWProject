@@ -33,7 +33,6 @@ require("./models/blogpost")
 require("./models/comment")
 const User = mongoose.model("User");
 const BlogPost = mongoose.model("BlogPost");
-const Comment = mongoose.model("Comment");
 
 /*
 /////////////////// USER HTTP METHODS //////////////////////////////////
