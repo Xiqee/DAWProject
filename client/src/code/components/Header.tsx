@@ -31,7 +31,7 @@ const Header = ({setState}) => {
     return (
         <Navbar bg="dark" variant="dark">
             <Container>
-                <Navbar.Brand onClick={() => setState({view: "home"})}>Devour Forum</Navbar.Brand>
+                <Navbar.Brand>Devour Forum</Navbar.Brand>
                 <Nav className="me-auto">
                     <Nav.Link onClick={() => setState({view: "posts"})}>Home</Nav.Link>
 

@@ -55,7 +55,6 @@ const CreatePost = ({setState}) => {
                     text: postState.text,
                 });
                 setState({view: "posts"})
-                // Do something with the response data
                 console.log(response.data);
             } catch (error) {
                 setError(error.message);
