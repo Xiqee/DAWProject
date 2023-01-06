@@ -2,6 +2,7 @@ import path from "path";
 import express, {Express, Request, Response} from "express";
 import mongoose from "mongoose";
 import {sha256} from "js-sha256";
+const cors = require('cors');
 const jwt = require("jwt-then");
 require("dotenv").config()
 
@@ -14,7 +15,13 @@ mongoose.connect(process.env.DB as string).then(() => {
 
 //Create express app for REST API
 const app: Express = express();
+
+//CORS SECURITY MECHANISM
+app.use(cors())
+
+//RECOGNISE OBJECTS AS JSON
 app.use(express.json());
+
 
 //Use client side
 app.use("/", express.static(path.join(__dirname, "../../client/dist")))
