@@ -59,8 +59,8 @@ const Posts = ({setState}) => {
                         <Accordion defaultActiveKey="0" style={{width: '100%', paddingTop: "10px"}}>
                             <Accordion.Item eventKey="0">
                                 <Accordion.Header>
-                                    <img src={require("/public/images/"+post.authorImage)} alt={" "} />
-                                    {" " + post.author}
+                                    <img src={require("/public/images/"+post.authorImage)} alt={" "} style={{borderRadius: "50%"}} />
+                                    <b style={{paddingLeft: "10px"}}>{post.author}</b>
                                 </Accordion.Header>
                                 <Accordion.Body>
                                     <p>{post.text}</p>
